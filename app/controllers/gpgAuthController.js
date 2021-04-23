@@ -330,6 +330,10 @@ class GpgAuthController extends MfaController {
     let options;
     if (this.passphrase !== undefined) {
       options = ['--passphrase', this.passphrase];
+      const gpgSupportsPinentryModeLoopback = await Crypto.supportsPinentryModeLoopback();
+      if (gpgSupportsPinentryModeLoopback) {
+        options = options.concat(['--pinentry-mode', 'loopback']);
+      }
     }
     const userAuthToken = await Crypto.decrypt(encryptedAuthToken, options);
     GpgAuthToken.validate('token', userAuthToken);
