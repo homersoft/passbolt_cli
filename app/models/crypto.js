@@ -122,6 +122,17 @@ class Crypto {
     }));
     return promise;
   }
+
+  /**
+   * Checks whether GPG supports pinentry mode loopback
+   * @returns {Promise}
+   */
+  static supportsPinentryModeLoopback() {
+    return new Promise(resolve =>
+      Gpg.call('', ['--pinentry-mode', 'loopback'], error =>
+        resolve(!error.message.includes('invalid option') && !error.message.includes('invalid pinentry mode')))
+    );
+  }
 }
 
 module.exports = Crypto;
